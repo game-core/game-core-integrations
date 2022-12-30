@@ -1,6 +1,7 @@
 # GameCore Integrations Library
 
-This is the library responsible for GameCore integrations.
+This is the library responsible for GameCore integrations.  
+Async code is used whenever possible, with synchronous code being "converted" and run in the main loop thread.
 
 While closely related to GameCore needs, this library can be used on it's own to support different services.
 
@@ -16,6 +17,7 @@ We have plans to support and integrate the following services:
 
 - [ ] IGDB  
 This is our main search provider.
+Developed in-house.
 
 - [ ] HowLongToBeat  
 For playtime related information.
