@@ -1,4 +1,4 @@
-from typing import Any, Mapping, Optional, Union, Dict
+from typing import Any, List, Mapping, Optional, Dict
 
 from httpx import AsyncClient
 from gc_integrations.constants import IGDB_API_URL
@@ -13,6 +13,7 @@ class IGDBClient:
             auth_token (str): The bearer token used for authentication.
             The helper function "get_bearer_token" can be used to obtain this token.
         """
+
         self.client_id = client_id
         self.auth_token = auth_token
 
@@ -26,7 +27,8 @@ class IGDBClient:
         }
         return AsyncClient(base_url=api_url, headers=headers)
 
-    def _map_to_query(self, query_dict: dict[str, Any]) -> str:
+    @staticmethod
+    def _map_to_query(query_dict: Optional[Dict[str, Any]]) -> str:
         """Maps a dictionary to a raw apicalypse query. Includes all fields by default."""
 
         # Return all fields by default
@@ -36,7 +38,7 @@ class IGDBClient:
         elif "fields" not in query_dict.keys():
             query_dict.update({"fields": "*"})
 
-        query_list = [f"{k} {v};" for k, v in query_dict.items()]
+        query_list = [f"{k} {str(v)};" for k, v in query_dict.items()]
         query = " ".join(query_list)
         return query
 
@@ -44,24 +46,15 @@ class IGDBClient:
         request = await self.client.post(endpoint, content=query_data)
         return request.json()
 
-    async def make_request(self, endpoint: str, query: Optional[Dict[str, Any]] = None) -> list:
-        """Searches the IGDB API for a specific endpoint.
+    async def make_request(
+        self, endpoint: str, query: Optional[Dict[str, Any]] = None
+    ) -> list:
 
-        Args:
-            endpoint (str): The endpoint to search.
-            e.g.: games, artworks, etc.
-            query (Mapping[str, Any]): The query to search for.
-            The query will be converted to a raw apicalypse query.
-
-        Returns:
-            list: The response from the IGDB API.
-        """
-
-        query = self._map_to_query(query)
-        result = await self._send_request(endpoint, query)
+        query_str = self._map_to_query(query_dict=query)
+        result = await self._send_request(endpoint, query_str)
         return result
 
-    async def resolve_similars(self, game_ids: list[int]):
+    async def resolve_similars(self, game_ids: List[int]):
         """Resolves similar games for a list of game ids.
 
         Args:
@@ -70,6 +63,7 @@ class IGDBClient:
         Returns:
             list: A list of similar games.
         """
+
         endpoint = "games"
         game_ids_str = ", ".join([str(game_id) for game_id in game_ids])
         query = {"fields": "*", "where": f"id = ({game_ids_str});"}

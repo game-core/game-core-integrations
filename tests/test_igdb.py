@@ -29,4 +29,4 @@ class TestIGDB(IsolatedAsyncioTestCase):
     async def test_similars_resolve(self):
         games_ids = [18115, 19222, 25905, 41349, 85804, 87170, 87507, 90788, 90965, 95776]
         request = await self.client.resolve_similars(games_ids)
-        print(request)
+        self.assertGreater(len(request), 0)

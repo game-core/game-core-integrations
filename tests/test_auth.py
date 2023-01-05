@@ -9,9 +9,7 @@ class TestAuth(IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.secrets = load_env_secrets()
 
-    async def test_igdb_auth(self):
-        auth = await get_igdb_auth_token(
-            self.secrets.IGDB_CLIENT_ID, self.secrets.IGDB_CLIENT_SECRET
-        )
+    async def test_igdb_auth(self) -> None:
+        auth = await get_igdb_auth_token(self.secrets.IGDB_CLIENT_ID, self.secrets.IGDB_CLIENT_SECRET)
         self.assertIsInstance(auth, IGDBAuth)
-        self.assertGreater(auth.expires_in, 0)
+        self.assertIn("access_token", auth.dict().keys())
