@@ -1,4 +1,4 @@
-import httpx
+import aiohttp
 from gc_integrations.constants import IGDB_AUTH_URL
 
 from gc_integrations.igdb.models.auth_models import IGDBAuth
@@ -12,7 +12,7 @@ async def get_igdb_auth_token(client_id: str, client_secret: str) -> IGDBAuth:
         "grant_type": "client_credentials",
     }
 
-    async with httpx.AsyncClient() as client:
+    async with aiohttp.ClientSession() as client:
         request = await client.post(IGDB_AUTH_URL, params=query_params)
-        result = request.json()
+        result = await request.json()
         return IGDBAuth(**result)

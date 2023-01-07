@@ -1,8 +1,8 @@
+from time import sleep
 from unittest import IsolatedAsyncioTestCase
 
-from tests.common_keys import igdb_auth, igdb_secrets
 from gc_integrations.igdb import IGDBClient
-from time import sleep
+from tests.common_keys import igdb_auth, igdb_secrets
 
 
 class TestIGDB(IsolatedAsyncioTestCase):
@@ -14,19 +14,34 @@ class TestIGDB(IsolatedAsyncioTestCase):
     async def test_games(self):
         endpoint = "games"
         request = await self.client.make_request(endpoint)
-        print(request)
+        self.assertIsInstance(request, list)
+        self.assertGreater(len(request), 0)
+
+    async def test_games_with_pagination(self):
+        endpoint = "games"
+        request = await self.client.make_request(endpoint, {"page": 2})
         self.assertIsInstance(request, list)
         self.assertGreater(len(request), 0)
 
     async def test_games_with_query(self):
         endpoint = "games"
-        query = {"fields": "name", "where": "name = \"Super Mario 64\";"}
+        query = {"fields": "name", "where": 'name = "Super Mario 64";'}
         request = await self.client.make_request(endpoint, query)
-        print(request)
         self.assertIsInstance(request, list)
         self.assertGreater(len(request), 0)
 
     async def test_similars_resolve(self):
-        games_ids = [18115, 19222, 25905, 41349, 85804, 87170, 87507, 90788, 90965, 95776]
+        games_ids = [
+            18115,
+            19222,
+            25905,
+            41349,
+            85804,
+            87170,
+            87507,
+            90788,
+            90965,
+            95776,
+        ]
         request = await self.client.resolve_similars(games_ids)
         self.assertGreater(len(request), 0)

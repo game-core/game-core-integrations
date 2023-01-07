@@ -13,3 +13,5 @@ class TestHltb(IsolatedAsyncioTestCase):
     async def test_dlc_search(self) -> None:
         results = await self.client.search_DLCs("The Ringed City")
         self.assertTrue(len(results) > 0)
+        
+    

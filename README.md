@@ -3,7 +3,8 @@
 This is the library responsible for GameCore integrations.  
 Async code is used whenever possible, with synchronous code being "converted" and run in the main loop thread.
 
-While closely related to GameCore needs, this library can be used on it's own to support different services.
+While closely related to GameCore needs, this library can be used on it's own to support different services.  
+Most integrations are based on third-party open source libraries, so you may prefer to use these instead.
 
 - [GameCore Integrations Library](#gamecore-integrations-library)
   - [Integrations](#integrations)
@@ -26,7 +27,10 @@ For playtime related information.
 Integration for populating user libraries with Steam games and achievements.
 
 - [ ] PSN  
-Integration for populating user libraries with PSN games and achievements.
+Integration for populating user libraries with PSN games and achievements.  
+
+Powered by the [psnawp](https://github.com/isFakeAccount/psnawp) Python library.
 
 - [ ] Xbox Live  
 Integration for populating user libraries with Xbox Live games and achievements
+
